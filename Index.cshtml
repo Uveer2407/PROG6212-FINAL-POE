@@ -1,0 +1,64 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = null; 
+    var role = HttpContextAccessor.HttpContext?.Session?.GetString("Role");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Overview</title>
+</head>
+<body>
+    <h1>Claims Overview</h1>
+
+    @if (role != null)
+    {
+        if (role.Equals("Admin"))
+        {
+            <div>
+                <h2>Welcome, Admin</h2>
+                <p>You have full access to all claims.</p>
+                <table>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    @foreach (var claim in Model) 
+                    {
+                        <tr>
+                            <td>@claim.ClaimId</td>
+                            <td>@claim.Description</td>
+                            <td>@claim.Status</td>
+                            <td>
+                                <a href="/Claims/Details/@claim.ClaimId">Details</a>
+                                @if (claim.Status == "Pending")
+                                {
+                                    <a href="/Claims/Approve/@claim.ClaimId">Approve</a>
+                                    <a href="/Claims/Reject/@claim.ClaimId">Reject</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+        else if (role.Equals("User"))
+        {
+            <div>
+                <h2>Welcome, User</h2>
+                <p>You have limited access.</p>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Please log in to view this page.</p>
+    }
+</body>
+</html>
