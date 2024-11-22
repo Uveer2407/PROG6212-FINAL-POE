@@ -1,0 +1,31 @@
+using Xunit;
+using Moq;
+using Microsoft.EntityFrameworkCore;
+using CMCS.Controllers;
+using CMCS.Models;
+using System.Threading.Tasks;
+
+public class ClaimControllerTests
+{
+    [Fact]
+    public async Task Test_Claim_Approval()
+    {
+        var options = new DbContextOptionsBuilder<DatabaseContext>()
+            .UseInMemoryDatabase(databaseName: "TestDB")
+            .Options;
+
+        using (var context = new DatabaseContext(options))
+        {
+            context.Claims.Add(new Claim { ClaimId = 1, LecturerId = 2, Status = "Pending" });
+            context.SaveChanges();
+        }
+
+        using (var context = new DatabaseContext(options))
+        {
+            var controller = new ClaimController(context);
+            await controller.ApproveReject(1, true, null); 
+            Assert.Equal("Approved", context.Claims.Find(1).Status);
+        }
+    }
+
+}
