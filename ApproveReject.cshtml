@@ -1,0 +1,17 @@
+@model CMCS.Models.Claim
+
+<h2>Approve/Reject Claim</h2>
+
+<form method="post">
+    <p>Description: @Model.Description</p>
+    <p>Hours Worked: @Model.HoursWorked</p>
+    <p>Hourly Rate: @Model.HourlyRate</p>
+    <p>Status: @Model.Status</p>
+
+    <label for="rejectionReason">Reason for Rejection (if any):</label>
+    <textarea id="rejectionReason" name="rejectionReason"></textarea>
+    <br>
+    <button name="isApproved" value="true">Approve</button>
+    <button name="isApproved" value="false">Reject</button>
+</form>
+
